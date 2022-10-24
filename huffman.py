@@ -1,5 +1,5 @@
 import sys
-import heapq
+from heapq import heappush, heappop, heapify
 
 
 def file_character_frequencies(file_name):
@@ -7,8 +7,8 @@ def file_character_frequencies(file_name):
     contents = ""
     with open(file_name) as f:
         contents = f.read()
-    for chars in contents:
-        freqs[chars] = freqs.get(chars, 0) + 1
+    for symbol in contents:
+        freqs[symbol] = freqs.get(symbol, 0) + 1
     return freqs
 
 
@@ -35,16 +35,29 @@ class PriorityTuple(tuple):
         return not x
 
 def huffman_codes_from_frequencies(frequencies):
-    # Suggested helper
-    return {}
+    huffmanCodes = {}
+    heap = [PriorityTuple((freq, (sym,))) for sym, freq in frequencies.items()]
+    heapify(heap)
+    
+    
+    while len(heap) > 1:
+        leftFreq, leftSymbols = heappop(heap)
+        for symbol in  leftSymbols:
+            huffmanCodes[symbol] = "0" + huffmanCodes.get(symbol, "")
+        rightFreq, rightSymbols = heappop(heap)
+        for symbol in rightSymbols:
+            huffmanCodes[symbol] = "1" + huffmanCodes.get(symbol, "")
+            
+        newNode = PriorityTuple((leftFreq + rightFreq, leftSymbols + rightSymbols))
+        heappush(heap, newNode)
+    
+    return huffmanCodes
 
 
 def huffman_letter_codes_from_file_contents(file_name):
     """WE WILL GRADE BASED ON THIS FUNCTION."""
-    # Suggested strategy...
-    #freqs = file_character_frequencies(file_name)
-    #return huffman_codes_from_frequencies(freqs)
-    return {}
+    frequencies = file_character_frequencies(file_name)
+    return huffman_codes_from_frequencies(frequencies)
 
 
 def encode_file_using_codes(file_name, letter_codes):
@@ -57,6 +70,7 @@ def encode_file_using_codes(file_name, letter_codes):
         for c in contents:
             fout.write(letter_codes[c])
     print("Wrote encoded text to {}".format(file_name_encoded))
+    return file_name_encoded
 
 
 def decode_file_using_codes(file_name_encoded, letter_codes):
@@ -77,15 +91,28 @@ def decode_file_using_codes(file_name_encoded, letter_codes):
                 fout.write(letter)
                 partial_code = ""
     print("Wrote decoded text to {}".format(file_name_encoded_decoded))
+    return file_name_encoded_decoded
 
 
 def main():
     """Provided to help you play with your code."""
     import pprint
-    frequencies = file_character_frequencies(sys.argv[1])
-    pprint.pprint(frequencies)
+    fileName = sys.argv[1]
+    frequencies = file_character_frequencies(fileName)
+    #pprint.pprint(frequencies)
     codes = huffman_codes_from_frequencies(frequencies)
-    pprint.pprint(codes)
+    #pprint.pprint(codes)
+    encodedFile = encode_file_using_codes(fileName, codes)
+    encodedText = ""
+    with open(encodedFile) as f:
+        encodedText = f.read()
+    print("Encoded Text: {}".format(encodedText))
+    decodedFile = decode_file_using_codes(encodedFile, codes)
+    decodedText = ""
+    with open(decodedFile) as f:
+        decodedText = f.read()
+    print("Decoded Text: {}".format(decodedText))
+    
 
 
 if __name__ == '__main__':
