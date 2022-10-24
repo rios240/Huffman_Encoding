@@ -50,8 +50,6 @@ def huffman_codes_from_frequencies(frequencies):
             
         newNode = PriorityTuple((leftFreq + rightFreq, leftSymbols + rightSymbols))
         heappush(heap, newNode)
-        
-    
     
     return huffmanCodes
 
