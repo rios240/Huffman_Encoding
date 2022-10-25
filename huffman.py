@@ -39,6 +39,10 @@ def huffman_codes_from_frequencies(frequencies):
     heap = [PriorityTuple((freq, (sym,))) for sym, freq in frequencies.items()]
     heapify(heap)
     
+    if len(heap) == 1:
+        for symbol in frequencies:
+            huffmanCodes[symbol] = "0"
+        return huffmanCodes
     
     while len(heap) > 1:
         leftFreq, leftSymbols = heappop(heap)
