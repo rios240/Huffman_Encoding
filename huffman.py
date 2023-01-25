@@ -13,8 +13,6 @@ def file_character_frequencies(file_name):
 
 
 class PriorityTuple(tuple):
-    """A specialization of tuple that compares only its first item when sorting.
-    Create one using double parens e.g. PriorityTuple((x, (y, z))) """
     def __lt__(self, other):
         return self[0] < other[0]
 
@@ -59,13 +57,11 @@ def huffman_codes_from_frequencies(frequencies):
 
 
 def huffman_letter_codes_from_file_contents(file_name):
-    """WE WILL GRADE BASED ON THIS FUNCTION."""
     frequencies = file_character_frequencies(file_name)
     return huffman_codes_from_frequencies(frequencies)
 
 
 def encode_file_using_codes(file_name, letter_codes):
-    """Provided to help you play with your code."""
     contents = ""
     with open(file_name) as f:
         contents = f.read()
@@ -78,7 +74,6 @@ def encode_file_using_codes(file_name, letter_codes):
 
 
 def decode_file_using_codes(file_name_encoded, letter_codes):
-    """Provided to help you play with your code."""
     contents = ""
     with open(file_name_encoded) as f:
         contents = f.read()
@@ -99,7 +94,6 @@ def decode_file_using_codes(file_name_encoded, letter_codes):
 
 
 def main():
-    """Provided to help you play with your code."""
     import pprint
     fileName = sys.argv[1]
     frequencies = file_character_frequencies(fileName)
@@ -120,5 +114,4 @@ def main():
 
 
 if __name__ == '__main__':
-    """We are NOT grading you based on main, this is for you to play with."""
     main()
